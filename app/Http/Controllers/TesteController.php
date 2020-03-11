@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 class TesteController extends Controller
 {
     public function index(){
-        //return 'aojsoajfajhfafa';
-        //return view('Layouts/LayoutFull');
-        $teste = 'oiiiii';
-        dd($teste);
-        //dd('Hello World');
+        return view('Clients/index');
     }
 }
