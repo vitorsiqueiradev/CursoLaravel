@@ -3,12 +3,16 @@
 @push('css')
 
 @endpush
+@if (Session::has('success'))
+            toastr["success"]("<b>SUCESSO: </b>"<br>
+            {{ Session::get('success') }}");
+@endif
 @section('conteudo')
 <div style="text-align:center">
     <h1>CLIENTES CADASTRADOS</h1>
 </div>
 <div>
-    <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Adicionar</a>
+    <a href="{{route('client.create')}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Adicionar</a>
 </div>
 <br />
 <div>

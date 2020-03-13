@@ -4,15 +4,29 @@
 
 @endpush
 @section('conteudo')
-
-    <form action="">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<form method="POST" action="{{route('client.store')}}" class="form-horizontal form-validate">
+{{csrf_field()}}
+        <div style="text-align:center">
+            <label>Ativo?</label>
+            <input type="checkbox" id="box" name="box" value='{{ old("checkbox") }}'>
+        </div>
         <div style="text-align:center">
             <label>
                 <br />
-                Nome:  <input type="text"/><br /><br />
-                CPF:  <input id="cpf" name="cpf" type="text" class="cpf-mask"/><br /><br />
-                Endereço:  <input type="text"/><br /><br />
-                <button class="btn btn-primary" type="submit">Submit</button>
+                Nome:       <input id="nome" name="nome" type="text" required value='{{ old("nome") }}'/><br /><br />
+                CPF:        <input id="cpf" name="cpf" type="text" class="cpf-mask" value='{{ old("cpf") }}'/><br /><br />
+                Endereço:   <input id="end" name="end" type="text" value='{{ old("end") }}'/><br /><br />
+                E-mail:     <input id="email" name="email" type="text" value='{{ old("email") }}'/><br /><br />
+                <button class="btn btn-success" type="submit">Cadastrar</button>
             </label>
             
         </div>
