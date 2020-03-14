@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientStorerequest;
+use App\Http\Requests\ClientEditRequest;
 use Illuminate\Http\Request;
 use App\Models\Client;
 
@@ -24,7 +25,7 @@ class ClientController extends Controller
         return view('Clients/index',compact('clients'));
     }
 
-    public function create(ClientStorerequest $request){
+    public function create(){
         return view('Clients/create');
 
 
@@ -42,12 +43,66 @@ class ClientController extends Controller
         $data = $request->all();
         $clientModel = app(Client::class);
         $client = $clientModel->create([
-            'nome'=> $data['nome'],
-            'cpf'=> preg_replace("/[A-Za-z0-9]/", "", $data['cpf']),
+            'name'=> $data['nome'],
+            'cpf'=> preg_replace("/[^A-Za-z0-9]/", "", $data['cpf']),
             'email'=> $data['email'],
-            'end'=> $data['end'] ?? null,
+            'endereco'=> $data['end'] ?? null,
             'active_flag'=> isset($data['checkbox']) ? true : false,
         ]);
-        return redirect()->route('clients.index');        
+        return redirect()->route('client.index');        
     }
+
+    public function destroy($id)
+    {
+        if(!empty($id)){
+            $clientModel = app(Client::class);
+            $client = $clientModel->find($id);
+            if(!empty($client)){
+                $client->delete();
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Cliente deletado com sucesso.',
+                    'reload'  => true,
+                ]);
+            }
+            else{
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Cliente não encontrado.',
+                    'reload'  => true,
+                ]);
+            }
+            
+
+        }
+        else{
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'ID não está na requisição',
+                'reload'  => true,
+            ]);
+
+        }
+    }
+
+    public function edit($id){
+        $clientModel = app(Client::class);
+        $client = $clientModel->find($id);
+        return view('Clients/edit', compact('client'));
+    }
+
+    public function update(ClientEditRequest $request,$id){
+        $data = $request->all();
+        $clientModel = app(Client::class);
+        $client = $clientModel->find($id);
+        $client->update([
+            'name'=> $data['nome'],
+            'cpf'=>preg_replace("/[^A-Za-z0-9]/", "",$data['cpf']) ,
+            'email'=>$data['email'],
+            'endereco'=>$data['end'] ?? null,
+            'active_flag'=> (($data['activebox'] ?? ' ') == null),
+        ]);
+        return redirect()->route('client.index');
+    }
+
 }
